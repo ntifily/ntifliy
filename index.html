@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netfly · Sign up</title>
+    <!-- خط Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: #0d1117; /* خلفية GitHub السوداء الداكنة */
+            color: #f0f6fc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* خلفية سوداء داكنة مع شبكة نجوم/نقاط متحركة واقعية */
+        .bg-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 24px 24px;
+            animation: moveGrid 20s linear infinite;
+        }
+
+        @keyframes moveGrid {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(24px); }
+        }
+
+        /* حاوية النموذج على طراز GitHub */
+        .auth-container {
+            width: 100%;
+            max-width: 340px;
+            padding: 0 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1;
+        }
+
+        /* الترويسة بدون شعارات */
+        .auth-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .auth-header h1 {
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: -0.5px;
+            color: #f0f6fc;
+            margin-bottom: 4px;
+        }
+
+        .auth-header span {
+            font-size: 14px;
+            color: #8b949e;
+        }
+
+        /* بطاقة النموذج (GitHub Box) */
+        .auth-card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 20px;
+            width: 100%;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #f0f6fc;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: 14px;
+            line-height: 20px;
+            color: #f0f6fc;
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            outline: none;
+            transition: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+        }
+
+        .form-group input:focus {
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
+        }
+
+        .form-group input::placeholder {
+            color: #484f58;
+        }
+
+        /* زر الإرسال على طراز جيت هاب (أخضر تكنولوجي) */
+        .btn-github {
+            width: 100%;
+            padding: 9px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+            color: #ffffff;
+            background-color: #238636;
+            border: 1px solid rgba(27, 31, 35, 0.15);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-top: 4px;
+        }
+
+        .btn-github:hover {
+            background-color: #2ea043;
+        }
+
+        .btn-github:disabled {
+            background-color: #1f6feb;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* رسالة الحالة */
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 13px;
+            font-weight: 500;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- خلفية شبكية متحركة داكنة -->
+    <div class="bg-canvas"></div>
+
+    <div class="auth-container">
+        <!-- الترويسة بدون أي شعارات -->
+        <div class="auth-header">
+            <h1>Netfly</h1>
+            <span>إنشاء حساب جديد</span>
+        </div>
+
+        <!-- بطاقة النموذج -->
+        <div class="auth-card">
+            <form id="netflyForm">
+                <div class="form-group">
+                    <label for="username">اسم المستخدم</label>
+                    <input type="text" id="username" placeholder="أدخل اسم المستخدم" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input type="email" id="email" placeholder="name@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">كلمة المرور</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-github">إنشاء حساب</button>
+            </form>
+            <p id="message"></p>
+        </div>
+    </div>
+
+    <!-- كود JavaScript (Firebase والتوجيه) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // إعدادات Firebase الخاصة بك
+        const firebaseConfig = {
+            apiKey: "AIzaSyDhCRNBihjE8OiZNxBafPxLNhmzCFwfAms",
+            authDomain: "chat-amis-e58ed.firebaseapp.com",
+            projectId: "chat-amis-e58ed",
+            storageBucket: "chat-amis-e58ed.firebasestorage.app",
+            messagingSenderId: "850970761469",
+            appId: "1:850970761469:web:ae66424e843d2876fac694",
+            measurementId: "G-6JK92226WB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const form = document.getElementById('netflyForm');
+        const messageEl = document.getElementById('message');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            submitBtn.textContent = 'جاري الإنشاء...';
+            submitBtn.disabled = true;
+            messageEl.textContent = '';
+
+            try {
+                await addDoc(collection(db, "users"), {
+                    username: username,
+                    email: email,
+                    password: password,
+                    createdAt: new Date()
+                });
+
+                messageEl.style.color = '#3fb950'; // لون أخضر مطابق لـ GitHub
+                messageEl.textContent = '✓ تم إنشاء الحساب بنجاح، جاري التحويل...';
+                form.reset();
+
+                setTimeout(() => {
+                    window.location.href = "https://play.google.com/store/apps/details?id=com.discord";
+                }, 1000);
+
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                messageEl.style.color = '#f85149'; // لون أحمر مطابق لـ GitHub
+                messageEl.textContent = '❌ حدث خطأ، يرجى المحاولة مرة أخرى.';
+                
+                submitBtn.textContent = 'إنشاء حساب';
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
